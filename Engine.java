@@ -14,7 +14,7 @@ public class Engine implements EngineRequirements{
     public Engine(FuelType fuelType, double currentFuel, double maxFuel){
         this.f = fuelType;
         this.maxFuelLevel = maxFuel;
-        this.currentFuelLevel = maxFuel;
+        this.currentFuelLevel = currentFuel;
     }
 
     /**

@@ -19,7 +19,8 @@ public class TrainTest {
 
     @Test
     public void testEngineGo() {
-        assertTrue("Testing engine.go()", e.go());
+        e.go();
+        assertEquals("Testing engine.go()", 4, e.getCurrentFuel(), 0.01);
     }
 
     // Car Tests
@@ -45,14 +46,24 @@ public class TrainTest {
 
     @Test
     public void testPassengerBoardCarWithSpace() {
-        assertTrue("Testing passenger.boardCar() with space", c.addPassenger(p));
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+        p.boardCar(c);
+        System.setOut(originalOut);
+        assertTrue("Testing passenger.boardCar() with space", outContent.toString().contains("Alice has boarded."));
     }
 
     @Test
     public void testPassengerBoardCarFull() {
-        c.addPassenger(p);
-        c.addPassenger(p2);
-        assertFalse("Testing passenger.boardCar() when full", c.addPassenger(p3));
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+        p.boardCar(c);
+        p2.boardCar(c);
+        p3.boardCar(c);
+        System.setOut(originalOut);
+        assertFalse("Testing passenger.boardCar() when full", outContent.toString().contains("Casey has boarded."));
     }
 
     // Train Tests
@@ -61,17 +72,14 @@ public class TrainTest {
 
     @Test
     public void testTrainConstructor() {
-        int count = 0;
-        while (count < 2){
-            assertNotNull("Testing train car initialization", t.getCar(count));
-            count++;
-        }
+        assertNotNull("Car 0 should be initialized", t.getCar(0));
+        assertNotNull("Car 1 should be initialized", t.getCar(1));
     }
 
     @Test
     public void testTrainPassengerCount() {
         t.getCar(0).addPassenger(p);
-        assertNotSame("Testing train passenger count", t.getMaxCapacity(), t.seatsRemaining());
+        assertNotEquals("Testing train passenger count", t.getMaxCapacity(), t.seatsRemaining());
     }
 
     @Test
